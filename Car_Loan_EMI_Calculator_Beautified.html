@@ -1,0 +1,343 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Car Loan EMI Calculator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#f1f6f5;--card:#ffffff;--soft:#f5f9f8;--tx:#1f3a37;--mu:#6a7b78;--ac:#355e58;--ac2:#72b0ab;--ln:#e0eae8;--gd:#cfe9e4;--wr:#ffedd1;--er:#fdd5cc;--spruce:#355e58;--peacock:#053229;--coral:#fe9179;--gold:#b89d47;
+--sh:0 1px 2px rgba(5,50,41,.05),0 8px 24px -8px rgba(5,50,41,.10);--ff:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0d1716;--card:#15201f;--soft:#1b2827;--tx:#e6f0ee;--mu:#97aaa7;--ac:#72b0ab;--ln:#263634;--gd:#1f4a43;--wr:#4a3e14;--er:#5a2d25;--spruce:#4f8a82;--peacock:#e6f0ee;--sh:0 1px 2px rgba(0,0,0,.3),0 8px 24px -8px rgba(0,0,0,.5)}}
+:root[data-theme=dark]{--bg:#0d1716;--card:#15201f;--soft:#1b2827;--tx:#e6f0ee;--mu:#97aaa7;--ac:#72b0ab;--ln:#263634;--gd:#1f4a43;--wr:#4a3e14;--er:#5a2d25;--spruce:#4f8a82;--peacock:#e6f0ee;--sh:0 1px 2px rgba(0,0,0,.3),0 8px 24px -8px rgba(0,0,0,.5)}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.5 var(--ff);-webkit-font-smoothing:antialiased}
+main{max-width:1180px;margin:auto;padding:20px 16px 40px}
+h1{font-size:28px;font-weight:800;letter-spacing:-.02em;margin:4px 0 18px;color:var(--peacock)}
+h2{font-size:15px;font-weight:700;letter-spacing:.01em;margin:0 0 14px;color:var(--spruce);display:flex;align-items:center;gap:8px}
+h2::before{content:"";width:4px;height:16px;border-radius:2px;background:linear-gradient(var(--ac2),var(--spruce))}
+@media screen{h1{padding:26px 24px;border-radius:18px;color:#fff;background:radial-gradient(circle at 90% 0,#72b0ab55,transparent 55%),linear-gradient(135deg,#053229,#355e58);box-shadow:var(--sh)}
+h1::after{content:"Plan your EMI, prepayments and total cost of ownership";display:block;font-size:13px;font-weight:500;letter-spacing:0;opacity:.75;margin-top:4px}}
+.card{background:var(--card);border:1px solid var(--ln);border-radius:16px;padding:20px;margin-bottom:16px;box-shadow:var(--sh)}
+.g{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+label{display:block;font-size:11.5px;font-weight:600;color:var(--mu);margin-bottom:5px;letter-spacing:.02em}
+input,select,button{font:inherit;color:var(--tx);background:var(--soft);border:1px solid var(--ln);border-radius:10px;padding:9px 11px;width:100%;transition:border-color .15s,box-shadow .15s,background .15s}
+input:hover,select:hover{border-color:var(--ac2)}
+input:focus,select:focus{outline:0;border-color:var(--ac2);background:var(--card);box-shadow:0 0 0 3px #72b0ab40}
+input[type=range]{padding:0;accent-color:var(--spruce);height:34px;background:none;border:0;box-shadow:none}
+input[type=checkbox]{width:auto;accent-color:var(--spruce);margin-right:6px;vertical-align:-2px}
+button{cursor:pointer;width:auto;background:linear-gradient(135deg,#355e58,#2a4d48);color:#fff;border:0;padding:10px 18px;font-weight:600;box-shadow:0 2px 8px -2px rgba(5,50,41,.4)}
+button:hover{filter:brightness(1.12);transform:translateY(-1px)}button:active{transform:none}
+button.s{background:var(--soft);color:var(--tx);border:1px solid var(--ln);box-shadow:none}
+button.s:hover{border-color:var(--ac2);background:var(--card)}
+.big{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+.m{background:var(--soft);border:1px solid var(--ln);border-radius:14px;padding:14px 16px;position:relative;overflow:hidden}
+.m::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--ac2)}
+.m:nth-child(2){background:linear-gradient(135deg,#053229,#355e58);border:0}.m:nth-child(2)::before{background:var(--coral)}
+.m:nth-child(2) b,.m:nth-child(2) span{color:#fff}.m:nth-child(2) span{opacity:.75}
+.m b{display:block;font-size:22px;font-weight:800;letter-spacing:-.01em;margin-top:2px;font-variant-numeric:tabular-nums}
+.m span{font-size:11.5px;font-weight:600;color:var(--mu);text-transform:uppercase;letter-spacing:.05em}
+.sm{display:grid;gap:0 28px;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));margin-top:14px}
+.sm div{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid var(--ln);padding:8px 2px}
+.sm span{color:var(--mu)}.sm b{font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
+.w{overflow-x:auto;border-radius:12px}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:12.5px;font-variant-numeric:tabular-nums}
+th,td{padding:8px 12px;border-bottom:1px solid var(--ln);text-align:right;white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+th{background:var(--soft);color:var(--spruce);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;position:sticky;top:0}
+tr:hover td{background:var(--soft)}
+#schWrap{max-height:520px;overflow:auto;border:1px solid var(--ln)}
+.best{background:var(--gd)!important;font-weight:700}
+.msg{padding:10px 14px;border-radius:12px;margin-bottom:10px;border-left:4px solid var(--coral)}
+.warn{background:var(--wr)}.err{background:var(--er)}.ok{background:var(--gd);border-left-color:var(--spruce)}
+.pp{border:1px dashed var(--ac2);background:var(--soft);border-radius:14px;padding:14px;margin-bottom:12px}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}.mu{color:var(--mu);font-size:12px}
+svg text{fill:var(--tx);font-size:11px;font-family:var(--ff)}
+.ch{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+.ch>div{background:var(--soft);border:1px solid var(--ln);border-radius:14px;padding:14px}
+#printAction{display:flex;justify-content:flex-end;margin:4px 0 0}#printAction button{min-width:190px}
+@media(max-width:600px){main{padding:12px 10px 30px}.card{padding:14px;border-radius:14px}h1{font-size:22px}.m b{font-size:19px}}
+@media print{
+  @page{size:A4 portrait;margin:9mm}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .noprint{display:none!important}
+  html,body{background:#fff!important;color:#000!important;width:100%;height:auto;overflow:visible!important}
+  body{font-size:9px;line-height:1.3}
+  main{max-width:none;width:100%;padding:0;margin:0}
+  h1{font-size:19px;color:#053229!important;background:none!important;padding:0!important;box-shadow:none!important;margin:0 0 7px}
+  h1::after{display:none!important}
+  h2::before{display:none}
+  .m,.m:nth-child(2){background:#f7faf9!important;border:1px solid #d9e5e2!important}.m::before{display:none}
+  .m:nth-child(2) b,.m:nth-child(2) span{color:#053229!important}
+  .ch>div{background:none;border:0;padding:0}
+  h2{font-size:12px;color:#355e58;margin:0 0 7px}
+  .card{box-shadow:none;border-color:#d9e5e2;margin:0 0 8px;padding:8px;break-inside:avoid;page-break-inside:avoid}
+  #printHeader{display:block!important;border:1px solid #d9e5e2;border-left:5px solid #72b0ab;background:#f7faf9;padding:8px 10px;margin:0 0 8px;break-inside:avoid;page-break-inside:avoid}
+  #printHeader .ph-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+  #printHeader .ph-item{border-right:1px solid #d9e5e2;padding-right:8px;min-width:0}
+  #printHeader .ph-item:last-child{border-right:0}
+  #printHeader span{display:block;font-size:8px;color:#60706d;text-transform:uppercase;letter-spacing:.35px}
+  #printHeader strong{display:block;font-size:18px;line-height:1.2;color:#053229;margin-top:3px;overflow-wrap:anywhere}
+  #msgs{margin-bottom:6px}
+  #msgs:empty{display:none}
+  #cmpc.pdf-hide{display:none!important}
+  #cmpc,#scenarioCard{break-inside:avoid;page-break-inside:avoid}
+  #scenarioCard .w,#cmpc .w{overflow:visible!important}
+  #scenarioCard table,#cmpc table{width:100%;table-layout:auto}
+  #scenarioCard input{background:transparent;border:0;padding:0;text-align:right;width:auto;min-width:55px}
+  #scenarioCard .mu{font-size:8px}
+  #charts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  #charts>div{break-inside:avoid;page-break-inside:avoid;min-width:0}
+  #charts svg{display:block;width:100%!important;max-width:100%;height:auto;max-height:205px}
+  #scheduleCard{break-before:auto;page-break-before:auto;break-inside:auto;page-break-inside:auto}
+  #schWrap{max-height:none!important;height:auto!important;overflow:visible!important}
+  #sch{width:100%!important;font-size:7px;table-layout:auto}
+  #sch thead{display:table-header-group}
+  #sch tr{break-inside:avoid;page-break-inside:avoid}
+  #sch th,#sch td{padding:2px 3px;white-space:nowrap}
+  #sch th{position:static}
+  #scheduleCard .w{overflow:visible!important}
+  .sm{grid-template-columns:repeat(3,minmax(0,1fr));gap:2px 12px;margin-top:5px}
+  .sm div{padding:1px 0}
+  .big{grid-template-columns:repeat(6,minmax(0,1fr));gap:6px}
+  .m{padding:6px}
+  .m b{font-size:16px}
+  .m span{font-size:8px}
+  .ch{grid-template-columns:1fr 1fr;gap:8px}
+  .mu{font-size:8px}
+  table{font-size:8px}
+  th,td{padding:3px 5px}
+  #cash{margin-top:4px}
+  #printAction{display:none!important}
+}
+</style></head><body><main>
+<h1>Car Loan EMI Calculator</h1>
+<div id="printHeader" style="display:none"><div class="ph-grid"><div class="ph-item"><span>Name of Car</span><strong id="printCarName">—</strong></div><div class="ph-item"><span>Car Model</span><strong id="printCarModel">—</strong></div><div class="ph-item"><span>On-road Price</span><strong id="printOnRoad">—</strong></div><div class="ph-item"><span>Down Payment</span><strong id="printDownPayment">—</strong></div></div></div>
+<div id="msgs"></div>
+<section class="card noprint"><h2>Car Details</h2><div class="g">
+<div><label>Name of Car</label><input id="car" value="My New Car"></div><div><label>Car Model</label><input id="model" value="Model"></div>
+<div><label>Ex-showroom Price (₹)</label><input id="ex" type="number" value="1000000"></div>
+<div><label>RTO / Registration (₹)</label><input id="rto" type="number" value="0"></div>
+<div><label>Insurance (₹)</label><input id="ins" type="number" value="0"></div>
+<div><label>Extended Warranty (₹)</label><input id="war" type="number" value="0"></div>
+<div><label>Accessories (₹)</label><input id="acc" type="number" value="0"></div>
+<div><label>Other Charges (₹)</label><input id="oth" type="number" value="0"></div>
+<div><label>On-road Price (₹) — enter directly, or leave blank to use the sum</label><input id="onr" type="number" placeholder="auto"></div></div>
+<div class="mu" id="onrNote"></div></section>
+
+<section class="card noprint"><h2>Down Payment</h2><div class="g">
+<div><label>Mode</label><select id="dpm"><option value="p">Percentage (%)</option><option value="a">Absolute Amount (₹)</option></select></div>
+<div><label id="dpl">Down Payment %</label><input id="dpv" type="number" value="20"></div></div>
+<div class="mu" id="dpNote"></div></section>
+
+<section class="card noprint"><h2>Loan Details &amp; Charges</h2><div class="g">
+<div><label>Interest Rate (% p.a.)</label><input id="rate" type="number" step="0.05" value="8"></div>
+<div><label>Interest Type</label><select id="itype"><option value="r">Reducing Rate</option><option value="f">Flat Rate</option></select></div>
+<div><label id="tl">Tenure</label><input id="ten" type="range" min="1" max="10" step="1" value="5"></div>
+<div><label>Processing Fee (₹)</label><input id="pf" type="number" value="0"></div>
+<div><label>GST on Processing Fee (%)</label><input id="pfg" type="number" value="18"></div>
+<div><label>Documentation Fee (₹)</label><input id="df" type="number" value="0"></div>
+<div><label>Other Loan Charges (₹)</label><input id="oc" type="number" value="0"></div>
+<div><label><input type="checkbox" id="fin"> Finance these charges through the loan</label></div></div>
+<div class="mu" id="itNote"></div></section>
+
+<section class="card noprint"><h2>Loan Dates</h2><div class="g">
+<div><label>Disbursement Date</label><input id="dd" type="date"></div>
+<div><label>First EMI Date (monthly)</label><input id="fd" type="date"></div>
+<div><label>Existing Loan?</label><select id="ex_l"><option value="n">No</option><option value="y">Yes</option></select></div>
+<div class="xl"><label>Original Loan Amount (₹)</label><input id="oa" type="number" value="1000000"></div>
+<div class="xl"><label>Original Loan Date</label><input id="od" type="date"></div></div>
+<div class="mu">Existing loan: tenure above = original tenure; EMIs paid / remaining are computed from today's date. First EMI = one month after the original loan date.</div></section>
+
+<section class="card"><h2>Loan Summary</h2><div class="big" id="prim"></div><div class="sm" id="sum"></div>
+<h2 style="margin-top:14px">Cash Flow &amp; True Cost</h2><div class="sm" id="cash"></div></section>
+
+<section class="card noprint"><h2>Partial Payment / Prepayment</h2>
+<div class="mu">Order of events on an EMI date: EMI first → partial payment second. A payment made between EMI dates is applied right after the next EMI. Charges and GST never reduce principal.</div>
+<div id="pays"></div><div class="row"><button id="addp">+ Add Partial Payment</button><button class="s" id="cmpb">Compare Both Options</button></div>
+<div id="impact"></div></section>
+
+<section class="card" id="cmpc"><h2>Compare Both Prepayment Options</h2><div id="cmp" class="w"><span class="mu">Add a partial payment and click “Compare Both Options”.</span></div></section>
+
+<section class="card" id="scenarioCard"><h2>Compare Loan Scenarios</h2><div class="mu">No partial payments. Uses the on-road price and interest type above. All scenarios use the same interest rate; Scenario C has a tenure 2 years longer than Scenario A.</div><div class="w"><table id="scn"></table></div></section>
+
+<section class="card"><h2>Graphical Analysis</h2><div class="ch" id="charts"></div></section>
+
+<section class="card" id="scheduleCard"><h2>Repayment Schedule</h2><div class="row noprint"><button id="csv">Download CSV</button><button class="s" id="xls">Download Excel (.xls)</button></div>
+<div class="w" id="schWrap"><table id="sch"></table></div></section>
+<p class="mu">Estimates only. Flat-rate and reducing-rate loans are not directly equivalent: a flat rate charges interest on the original principal, so its effective cost is much higher than the same reducing rate. Flat-rate prepayment treatment varies by lender; here, “Reduce EMI” re-computes flat interest on the outstanding principal and “Reduce Tenure” keeps the principal and interest instalments unchanged.</p>
+<div class="noprint" id="printAction"><button id="prn">Print / Save as PDF</button></div>
+</main>
+<script>
+const $=id=>document.getElementById(id),num=id=>{const v=parseFloat($(id).value);return isFinite(v)&&v>0?v:0};
+const inr=(v,d=2)=>{v=isFinite(v)?v:0;if(Math.abs(v)<0.005)v=0;return '₹'+v.toLocaleString('en-IN',{minimumFractionDigits:d,maximumFractionDigits:d})};
+const iso=d=>d.toISOString().slice(0,10),pd=s=>{const m=/^(\d{4})-(\d\d)-(\d\d)$/.exec(s||'');return m?new Date(Date.UTC(+m[1],m[2]-1,+m[3])):null};
+const dmy=d=>{const s=iso(d);return s.slice(8)+'-'+s.slice(5,7)+'-'+s.slice(0,4)};
+function addM(d,m,anchor){const t=d.getUTCFullYear()*12+d.getUTCMonth()+m,y=Math.floor(t/12),mo=t%12,dim=new Date(Date.UTC(y,mo+1,0)).getUTCDate();return new Date(Date.UTC(y,mo,Math.min(anchor||d.getUTCDate(),dim)))}
+const today=new Date(Date.UTC(...(new Date().toISOString().slice(0,10).split('-').map((x,i)=>i==1?x-1:+x))));
+const pmt=(B,r,N)=>r==0?B/N:B*r*Math.pow(1+r,N)/(Math.pow(1+r,N)-1);
+const remM=(B,E,r)=>r==0?Math.ceil(B/E-1e-9):Math.ceil(-Math.log(1-B*r/E)/Math.log(1+r)-1e-9);
+let pays=[],cmpOn=false;
+
+function simulate(o){ // returns {rows,warn}
+ const warn=[],r=o.rate/1200,flat=o.flat;let bal=o.P,endK=o.n,emi=flat?0:pmt(o.P,r,o.n),ppm=o.P/o.n,ipm=o.P*o.rate/1200;
+ let list=o.force==='none'?[]:o.pays.filter(p=>p.date&&p.amt>0).sort((a,b)=>a.date-b.date).map(p=>({...p}));
+ const rows=[],a=o.first.getUTCDate();
+ for(let k=1;bal>0.005&&k<=1200;k++){
+  const date=addM(o.first,k-1,a),open=bal,interest=flat?ipm:open*r;
+  let prin=flat?ppm:emi-interest;if(k>=endK||prin>=open-0.005||prin<0)prin=open;
+  bal=open-prin;let pp=0,ch=0,gst=0,ev=false;
+  while(list.length&&list[0].date<=date&&bal>0.005){const p=list.shift();let amt=p.amt;
+   if(amt>bal+0.005){warn.push('Partial payment of '+inr(p.amt)+' on '+dmy(p.date)+' exceeds outstanding principal; capped at '+inr(bal));amt=bal}
+   const c=p.ct==='p'?amt*p.cv/100:p.cv,g=c*p.gst/100;pp+=amt;ch+=c;gst+=g;bal-=amt;ev=true;
+   if(bal>0.005){const s=o.force||p.strat;
+    if(s==='emi'){const rn=Math.max(1,endK-k);endK=k+rn;if(flat){ppm=bal/rn;ipm=bal*o.rate/1200}else emi=pmt(bal,r,rn)}
+    else{if(flat)endK=k+Math.ceil(bal/ppm-1e-9);else endK=k+remM(bal,emi,r)}}}
+  if(bal<0.005)bal=0;
+  rows.push({k,date,open,emi:prin+interest,interest,prin,pp,ch,gst,out:prin+interest+pp+ch+gst,close:bal,next:flat?ppm+ipm:emi,ev})}
+ list.forEach(p=>warn.push('Partial payment on '+dmy(p.date)+' is after the loan closes and was ignored'));
+ return{rows,warn}}
+const S=(rows,f)=>rows.reduce((s,r)=>s+r[f],0);
+
+function inputs(){
+ const msgs=[],ex=$('ex_l').value==='y';
+ const sum=num('ex')+num('rto')+num('ins')+num('war')+num('acc')+num('oth'),onr=num('onr')||sum;
+ let dp=$('dpm').value==='p'?onr*num('dpv')/100:num('dpv');
+ const loanBase=ex?num('oa'):onr-dp;
+ if(!ex){if(num('dpv')<0||parseFloat($('dpv').value)<0)msgs.push(['err','Down payment cannot be negative.']);
+  if(dp>=onr&&onr>0)msgs.push(['err','Down payment must be less than the on-road price.']);if(onr<=0)msgs.push(['err','Enter a car price.'])}
+ const chg=num('pf')*(1+num('pfg')/100)+num('df')+num('oc'),fin=$('fin').checked;
+ const P=loanBase+(fin?chg:0);if(loanBase<=0)msgs.push(['err','Loan amount must be greater than zero.']);
+ const dd=pd($(ex?'od':'dd').value),fd=ex?(dd?addM(dd,1):null):pd($('fd').value);
+ if(!dd||!fd)msgs.push(['err','Enter valid dates.']);else if(fd<dd)msgs.push(['err','First EMI date cannot be before disbursement.']);
+ const rate=num('rate');if(rate>40)msgs.push(['warn','Interest rate is very high ('+rate+'%).']);
+ const ten=+$('ten').value,pp=pays.map(p=>({...p,date:pd(p.d),amt:Math.max(0,+p.a||0),cv:Math.max(0,+p.c||0),gst:Math.max(0,+p.g||0),ct:p.ct,strat:p.s}));
+ pp.forEach((p,i)=>{if(dd&&p.date&&p.date<dd){msgs.push(['err','Partial payment #'+(i+1)+' is before loan disbursement and was ignored.']);p.amt=0}if(!p.date&&p.d!=='')msgs.push(['err','Partial payment #'+(i+1)+' has an invalid date.'])});
+ return{msgs,ex,onr,sum,dp,P,loanBase,chg,fin,dd,fd,rate,ten,n:ten*12,flat:$('itype').value==='f',pp,valid:!msgs.some(m=>m[0]==='err')}}
+
+function render(){
+ const I=inputs();$('tl').textContent='Tenure: '+I.ten+(I.ten==1?' Year':' Years')+' / '+I.n+' Months ('+I.n+' EMIs)';
+ $('dpl').textContent=$('dpm').value==='p'?'Down Payment %':'Down Payment Amount (₹)';
+ $('onrNote').textContent='Estimated On-road Price used: '+inr(I.onr,0)+(num('onr')?' (entered directly)':' (sum of breakdown)');
+ $('dpNote').textContent='Down payment: '+inr(I.dp,0)+' ('+(I.onr?(I.dp/I.onr*100).toFixed(2):0)+'%) • Loan principal: '+inr(I.loanBase,0);
+ $('itNote').textContent=I.flat?'Interest Type: Flat Rate — interest is charged on the ORIGINAL principal for the whole tenure. Not equivalent to a reducing rate.':'Interest Type: Reducing Rate — interest is charged on the outstanding balance.';
+ document.querySelectorAll('.xl').forEach(e=>e.style.display=I.ex?'':'none');
+ $('msgs').innerHTML=I.msgs.map(m=>`<div class="msg ${m[0]}">${m[1]}</div>`).join('');
+ $('printCarName').textContent=$('car').value.trim()||'—';$('printCarModel').textContent=$('model').value.trim()||'—';$('printOnRoad').textContent=inr(I.onr,0);$('printDownPayment').textContent=inr(I.dp,0);$('cmpc').classList.toggle('pdf-hide', !I.pp.some(p=>p.amt>0));
+ if(!I.valid){['prim','sum','cash','impact','sch','charts','scn'].forEach(i=>$(i).innerHTML='');return}
+ const base={P:I.P,rate:I.rate,flat:I.flat,n:I.n,first:I.fd,pays:I.pp},sim=simulate(base),R=sim.rows,none=simulate({...base,force:'none'}).rows;
+ I.msgs.push(...sim.warn.map(w=>['warn',w]));$('msgs').innerHTML+=sim.warn.map(w=>`<div class="msg warn">${w}</div>`).join('');
+ const T={prin:S(R,'prin'),int:S(R,'interest'),emi:S(R,'emi'),pp:S(R,'pp'),ch:S(R,'ch')+S(R,'gst')},tot=T.emi+T.pp+T.ch;
+ const emi0=R.length?R[0].emi:0,lc=I.fin?0:I.chg,dpc=I.ex?0:I.dp;
+ let outst=I.P,remInt=T.int,paidN=0,remN=R.length;
+ if(I.ex){const pr=R.filter(r=>r.date<=today);paidN=pr.length;outst=pr.length?pr[pr.length-1].close:I.P;remInt=S(R.filter(r=>r.date>today),'interest');remN=R.length-paidN}
+ const M=(l,v)=>`<div class="m"><span>${l}</span><b>${v}</b></div>`,L=(l,v)=>`<div><span>${l}</span><b>${v}</b></div>`;
+ $('printCarName').textContent=$('car').value.trim()||'—';$('printCarModel').textContent=$('model').value.trim()||'—';$('printOnRoad').textContent=inr(I.onr,0);$('printDownPayment').textContent=inr(I.dp,0);
+ $('prim').innerHTML=M('Loan Amount',inr(I.P,0))+M('Monthly EMI',inr(emi0,0))+M('Interest Rate',I.rate+'% '+(I.flat?'flat':'reducing'))+M('Total Interest',inr(T.int,0))+M('Total Repayment',inr(T.prin+T.int,0))+M('Loan Tenure',I.ten+' yrs / '+I.n+' mo'+(R.length!=I.n?' → '+R.length+' mo':''))+(I.ex?M('Outstanding Principal',inr(outst,0)):'');
+ const saved=(()=>{const a=S(none,'interest');return a-T.int})();
+ $('sum').innerHTML=L('Name of Car',$('car').value||'—')+L('Car Model',$('model').value||'—')+L('On-road Price',inr(I.onr,0))+L('Interest Type',I.flat?'Flat Rate':'Reducing Rate')+L('Number of EMIs',R.length)+
+  (I.ex?L('Original Principal',inr(I.P,0))+L('Principal Already Paid',inr(I.P-outst,0))+L('EMIs Paid',paidN)+L('EMIs Remaining',remN)+L('Remaining Interest',inr(remInt,0)):'')+
+  L('Total Principal Paid',inr(T.prin))+L('Total Interest Paid',inr(T.int))+L('Total EMI Payments',inr(T.emi))+L('Total Partial Payments',inr(T.pp))+L('Partial Payment Charges (incl. GST)',inr(T.ch))+L('Total Amount Paid (loan)',inr(tot))+L('Closing Balance',inr(R.length?R[R.length-1].close:0))+L('Interest Saved by Prepayments',inr(saved));
+ const cashT=dpc+T.emi+T.pp+lc+T.ch;
+ $('cash').innerHTML=L('Down Payment',inr(dpc))+L('EMI Payments',inr(T.emi))+L('Partial Payments',inr(T.pp))+L('Loan Charges (processing, GST, docs, other)',inr(I.chg))+(I.fin?L('…financed via loan (not paid upfront)',inr(I.chg)):'')+L('Partial Payment Charges',inr(T.ch))+L('<b>Total Cash Paid for Car</b>',inr(cashT))+
+  L('Total Financing Cost (interest + all charges)',inr(T.int+I.chg+T.ch))+L('Total Cost of Car incl. Financing',inr(I.onr+T.int+I.chg+T.ch));
+ // impact
+ const ev=R.filter(r=>r.pp>0);let h='';
+ if(ev.length){const fi=ev[0].k;h='<h2 style="margin-top:12px">Prepayment Impact</h2><div class="w"><table><tr><th>Metric</th><th>Before (no prepayment)</th><th>After (with prepayments)</th></tr>'+
+  [['Principal Prepaid','—',inr(T.pp)],['Total Interest',inr(S(none,'interest')),inr(T.int)],['Interest Saved','—',inr(saved)],['EMI',inr(none[0].emi),inr(R[R.length-1>fi-1?Math.min(fi,R.length-1):0].next)],['Tenure',none.length+' mo',R.length+' mo'],['Tenure Reduced By','—',(none.length-R.length)+' mo'],['Total Charges','—',inr(T.ch)],['Net Financial Benefit','—',inr(saved-T.ch)]].map(x=>`<tr><td>${x[0]}</td><td>${x[1]}</td><td>${x[2]}</td></tr>`).join('')+'</table></div>'}
+ $('impact').innerHTML=h;
+ $('cmpc').classList.toggle('pdf-hide',!ev.length);
+ // schedule — show Partial Payment and Charges columns only when an actual partial payment exists
+ const hasPrepay=R.some(r=>r.pp>0.005);
+ const schHead='<tr><th>#</th><th>EMI Date</th><th>Opening Principal</th><th>EMI</th><th>Interest Paid</th><th>Principal Paid</th>'+(hasPrepay?'<th>Partial Payment</th><th>Charges</th>':'')+'<th>Total Cash Outflow</th><th>Closing Principal</th></tr>';
+ const schRows=R.map(r=>`<tr${r.pp?' class=\"best\"':''}><td>${r.k}</td><td>${dmy(r.date)}</td><td>${inr(r.open)}</td><td>${inr(r.emi)}</td><td>${inr(r.interest)}</td><td>${inr(r.prin)}</td>`+(hasPrepay?`<td>${inr(r.pp)}</td><td>${inr(r.ch+r.gst)}</td>`:'')+`<td>${inr(r.out)}</td><td>${inr(r.close)}</td></tr>`).join('');
+ const schTotal='<tr><th>Total</th><th></th><th></th><th>'+inr(T.emi)+'</th><th>'+inr(T.int)+'</th><th>'+inr(T.prin)+'</th>'+(hasPrepay?'<th>'+inr(T.pp)+'</th><th>'+inr(T.ch)+'</th>':'')+'<th>'+inr(tot)+'</th><th>'+inr(R.length?R[R.length-1].close:0)+'</th></tr>';
+ $('sch').innerHTML=schHead+schRows+schTotal;
+ window._R=R;
+ compare(I,base,R,none);charts(I,R,none,T,base);scen(I);
+}
+function compare(I,base,R,none){
+ if(!cmpOn)return;const el=$('cmp');const ev=R.find(r=>r.pp>0);
+ if(!ev){el.innerHTML='<span class="mu">Add at least one valid partial payment first.</span>';return}
+ const fi=ev.k,A=simulate({...base,force:'emi'}).rows,B=simulate({...base,force:'tenure'}).rows;
+ const m=(rows,isNone)=>{const pre=rows[fi-1],fut=rows.slice(fi);return{pp:S(rows,'pp'),out:pre.close,emi:isNone?pre.next:rows[fi-1].next,ten:rows.length-fi,fi:S(fut,'interest'),fp:S(fut,'emi')+S(fut,'pp')+S(fut,'ch')+S(fut,'gst'),len:rows.length,chg:S(rows,'ch')+S(rows,'gst')}};
+ const n=m(none,1),a=m(A),b=m(B);
+ const sv=x=>n.fi-x.fi,er=x=>n.emi-x.emi,mr=x=>n.len-x.len,best=sv(a)>sv(b)+0.005?'a':sv(b)>sv(a)+0.005?'b':'';
+ const cell=(v,c)=>`<td class="${c}">${v}</td>`,row=(l,f,c)=>`<tr><td>${l}</td><td>${f(n,0)}</td>${cell(f(a),c==='sv'&&best==='a'?'best':'')}${cell(f(b),c==='sv'&&best==='b'?'best':'')}</tr>`;
+ el.innerHTML=`<p class="mu">Measured from the first partial payment (EMI #${fi}, ${dmy(ev.date)}). All your partial payments are applied under each strategy.</p><table><tr><th>Metric</th><th>No Prepayment</th><th>Reduce EMI</th><th>Reduce Tenure</th></tr>`+
+  row('Partial Payment (total)',x=>inr(x.pp))+row('Outstanding Principal after 1st payment',x=>inr(x.out))+row('EMI after payment',x=>inr(x.emi))+row('Remaining Tenure',x=>x.ten+' mo')+row('Future Interest',x=>inr(x.fi))+row('Total Future Payments',x=>inr(x.fp))+
+  row('Partial Payment Charges',x=>inr(x.chg))+`<tr><td>Interest Saved</td><td>₹0.00</td>${cell(inr(sv(a)),best==='a'?'best':'')}${cell(inr(sv(b)),best==='b'?'best':'')}</tr>`+
+  `<tr><td>EMI Reduction</td><td>₹0.00</td><td>${inr(er(a))}</td><td>${inr(er(b))}</td></tr><tr><td>Months Reduced</td><td>0</td><td>${mr(a)}</td><td>${mr(b)}</td></tr></table>
+  <p><b>Best for Lower Monthly Outflow:</b> ${er(a)>er(b)+0.005?'Reduce EMI':'Reduce Tenure'} &nbsp;•&nbsp; <b>Best for Maximum Interest Saving:</b> ${best==='a'?'Reduce EMI':best==='b'?'Reduce Tenure':'Both equal'}</p>
+  <div class="msg ok">${best==='b'?`Reduce Tenure saves ${inr(sv(b)-sv(a))} more interest than reducing EMI, finishing ${mr(b)-mr(a)} months earlier, while keeping your EMI at ${inr(b.emi)}.`:''}${best==='a'?`Reduce EMI saves ${inr(sv(a)-sv(b))} more interest than reducing tenure.`:''}${best===''?'Both options save the same interest.':''} Reduce EMI lowers your monthly payment by ${inr(er(a))} (to ${inr(a.emi)}) while keeping the tenure at ${a.len} months. The choice is yours: monthly cash flow vs total interest savings.</div>`;
+ window._cmp={n,a,b,A,B}}
+function line(series,w,h){const mx=Math.max(1,...series.flatMap(s=>s.v)),L=Math.max(...series.map(s=>s.v.length)),X=i=>40+i*(w-50)/Math.max(1,L-1),Y=v=>h-24-v/mx*(h-40);
+ return`<svg viewBox="0 0 ${w} ${h}" width="100%"><line x1="40" y1="${h-24}" x2="${w-10}" y2="${h-24}" stroke="#8896"/><line x1="40" y1="10" x2="40" y2="${h-24}" stroke="#8896"/><text x="4" y="16">${inr(mx,0)}</text><text x="${w-60}" y="${h-8}">${L} months</text>`+
+ series.map((s,j)=>`<polyline fill="none" stroke="${s.c}" stroke-width="2" points="${s.v.map((v,i)=>X(i)+','+Y(v)).join(' ')}"/><text x="${50+j*140}" y="${h-8}" style="fill:${s.c}">■ ${s.n}</text>`).join('')+'</svg>'}
+function bars(items,w,fmt){const mx=Math.max(1e-9,...items.map(i=>i.v));return`<svg viewBox="0 0 ${w} ${items.length*28+8}" width="100%">`+items.map((it,i)=>`<text x="0" y="${i*28+18}">${it.n}</text><rect x="150" y="${i*28+5}" width="${Math.max(1,it.v/mx*(w-290))}" height="18" fill="${it.c}" rx="3"/><text x="${155+it.v/mx*(w-290)}" y="${i*28+18}">${fmt(it.v)}</text>`).join('')+'</svg>'}
+function charts(I,R,none,T,base){
+ const bal=r=>[I.P].concat(r.map(x=>x.close)),tp=T.prin+T.pp*0;
+ let h=`<div><b>Principal vs Interest</b>${bars([{n:'Total Principal',v:I.P,c:'#355e58'},{n:'Total Interest',v:T.int,c:'#fe9179'}],420,v=>inr(v,0))}</div>`;
+ h+=`<div><b>Outstanding Principal over Time / Prepayment Impact</b>${line([{n:'Without prepayment',v:bal(none),c:'#b89d47'},{n:'With prepayment',v:bal(R),c:'#355e58'}],440,230)}</div>`;
+ if(cmpOn&&window._cmp){const c=window._cmp;h+=`<div><b>Option Comparison: Reduce EMI vs Reduce Tenure</b>`+['EMI','Remaining Tenure (months)','Future Interest'].map((t,i)=>{const f=['emi','ten','fi'][i];return`<div class="mu">${t}</div>`+bars([{n:'Reduce EMI',v:c.a[f],c:'#355e58'},{n:'Reduce Tenure',v:c.b[f],c:'#72b0ab'}],420,v=>i==1?Math.round(v):inr(v,0))}).join('')+'</div>'}
+ $('charts').innerHTML=h}
+function scen(I){
+  if(!$('scn').dataset.init){
+    $('scn').dataset.init=1;
+    $('scn').innerHTML='<tr><th>Input</th><th>Scenario A</th><th>Scenario B</th><th>Scenario C</th></tr>'+
+      '<tr><td>Down Payment %</td>'+[0,1,2].map(i=>`<td><input class="sc" data-k="d${i}" type="number" step="0.1" value="${i===1?30:20}" style="width:90px"></td>`).join('')+'</tr>'+
+      '<tr><td>Interest Rate % p.a.</td><td id="sr0"></td><td id="sr1"></td><td id="sr2"></td></tr>'+
+      '<tr><td>Interest Type</td><td id="si0"></td><td id="si1"></td><td id="si2"></td></tr>'+
+      '<tr><td>Tenure (years)</td><td id="st0"></td><td id="st1"></td><td id="st2"></td></tr>'+
+      '<tbody id="scr"></tbody>';
+    $('scn').addEventListener('input',()=>scenOut(inputs()));
+  }
+  scenOut(I);
+}
+function scenOut(I){
+  const v=k=>parseFloat(document.querySelector(`[data-k="${k}"]`)?.value)||0;
+  const aTen=Math.max(1,I.ten), tenures=[aTen,aTen,aTen+2];
+  const rates=[I.rate,I.rate,I.rate], dps=[v('d0'),v('d1'),v('d2')];
+  const res=[0,1,2].map(i=>{
+    const dp=I.onr*dps[i]/100, P=I.onr-dp, t=tenures[i];
+    const x=simulate({P,rate:rates[i],flat:I.flat,n:t*12,first:I.fd||today,pays:[],force:'none'}).rows;
+    const ti=S(x,'interest');
+    return{dp,P,emi:x.length?x[0].emi:0,r:rates[i],t,ti,tr:P+ti};
+  });
+  [0,1,2].forEach(i=>{
+    $('sr'+i).textContent=res[i].r.toFixed(2)+'%';
+    $('si'+i).textContent=I.flat?'Flat Rate':'Reducing Rate';
+    $('st'+i).textContent=res[i].t+' yrs';
+  });
+  const mn=k=>Math.min(...res.map(r=>r[k])),c=(r,k)=>r[k]-mn(k)<0.005?' class="best"':'';
+  $('scr').innerHTML=[
+    ['Down Payment',r=>inr(r.dp,0)],
+    ['Loan Amount',r=>inr(r.P,0)],
+    ['EMI',r=>inr(r.emi,0),'emi'],
+    ['Total Interest',r=>inr(r.ti,0),'ti'],
+    ['Total Repayment',r=>inr(r.tr,0),'tr']
+  ].map(x=>`<tr><td>${x[0]}${x[2]?' (lowest highlighted)':''}</td>${res.map(r=>`<td${x[2]?c(r,x[2]):''}>${x[1](r)}</td>`).join('')}</tr>`).join('');
+}
+// partial payment UI
+function drawPays(){$('pays').innerHTML=pays.map((p,i)=>`<div class="pp"><div class="g">
+<div><label>#${i+1} Date</label><input data-i="${i}" data-f="d" type="date" value="${p.d}"></div>
+<div><label>Amount (₹)</label><input data-i="${i}" data-f="a" type="number" value="${p.a}"></div>
+<div><label>Charge type</label><select data-i="${i}" data-f="ct"><option value="p"${p.ct=='p'?' selected':''}>Charge %</option><option value="f"${p.ct=='f'?' selected':''}>Fixed ₹</option></select></div>
+<div><label>Charge value</label><input data-i="${i}" data-f="c" type="number" value="${p.c}"></div>
+<div><label>GST on charges %</label><input data-i="${i}" data-f="g" type="number" value="${p.g}"></div>
+<div><label>Strategy</label><select data-i="${i}" data-f="s"><option value="emi"${p.s=='emi'?' selected':''}>Reduce EMI (same tenure)</option><option value="tenure"${p.s=='tenure'?' selected':''}>Reduce Tenure (same EMI)</option></select></div>
+<div><label>&nbsp;</label><button class="s" data-del="${i}">Remove</button></div></div>
+<div class="mu">Charges ${inr(p.ct=='p'?p.a*p.c/100:+p.c)} + GST ${inr((p.ct=='p'?p.a*p.c/100:+p.c)*p.g/100)} → cash outflow ${inr(+p.a+(p.ct=='p'?p.a*p.c/100:+p.c)*(1+p.g/100))}; principal reduction ${inr(+p.a)}</div></div>`).join('')}
+$('pays').addEventListener('input',e=>{const t=e.target,i=t.dataset.i;if(i==null)return;pays[i][t.dataset.f]=t.value;render();const m=document.querySelectorAll('#pays .mu');if(m[i]){const p=pays[i],c=p.ct=='p'?p.a*p.c/100:+p.c;m[i].textContent=`Charges ${inr(c)} + GST ${inr(c*p.g/100)} → cash outflow ${inr(+p.a+c*(1+p.g/100))}; principal reduction ${inr(+p.a)}`}});
+$('pays').addEventListener('click',e=>{if(e.target.dataset.del!=null){pays.splice(+e.target.dataset.del,1);drawPays();render()}});
+$('addp').onclick=()=>{const I=inputs(),b=I.fd||today;pays.push({d:iso(addM(b,12+pays.length*6)),a:100000,ct:'p',c:2,g:18,s:'emi'});drawPays();render()};
+$('cmpb').onclick=()=>{cmpOn=true;render();$('cmpc').scrollIntoView({behavior:'smooth'})};
+// export
+function csv(){const R=window._R||[],hasPrepay=R.some(r=>r.pp>0.005),h=['Payment #','EMI Date','Opening Principal','EMI','Interest Paid','Principal Paid'].concat(hasPrepay?['Partial Payment','Charges']:[]).concat(['Total Cash Outflow','Closing Principal']);
+ return h.join(',')+'\n'+R.map(r=>[r.k,dmy(r.date),r.open,r.emi,r.interest,r.prin].concat(hasPrepay?[r.pp,r.ch+r.gst]:[]).concat([r.out,r.close]).map(x=>typeof x=='number'?x.toFixed(2):x).join(',')).join('\n')}
+async function save(name,data,type){try{const d=await claude.use('downloads');if(d){await d.save({filename:name,data});return}}catch(e){if(e&&e.code==='declined')return}
+ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+data],{type}));a.download=name;a.click()}
+$('csv').onclick=()=>save('car-loan-schedule.csv',csv(),'text/csv');
+$('xls').onclick=()=>save('car-loan-schedule.xls','<table>'+csv().split('\n').map(l=>'<tr>'+l.split(',').map(c=>'<td>'+c+'</td>').join('')+'</tr>').join('')+'</table>','application/vnd.ms-excel');
+$('prn').onclick=()=>{const I=inputs();cmpOn=I.pp.some(p=>p.amt>0);render();window.print()};
+// init
+const t0=iso(today);$('dd').value=t0;$('fd').value=iso(addM(today,1));$('od').value=iso(addM(today,-24));
+document.querySelectorAll('main > section input:not(.sc),main > section select').forEach(e=>{if(!e.closest('#pays'))e.addEventListener('input',()=>{if(e.id==='dd')$('fd').value=iso(addM(pd($('dd').value)||today,1));render()})});
+render();
+</script></body></html>
